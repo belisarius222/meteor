@@ -24,11 +24,16 @@ if (Package.webapp) {
 
   // Proxy the public methods of Meteor.server so they can
   // be called directly on Meteor.
-  _.each(['publish', 'methods', 'call', 'apply', 'onConnection',
-          'notifyUser', 'isUserOnline'],
+  _.each(['publish', 'methods', 'call', 'apply', 'onConnection'],
          function (name) {
            Meteor[name] = _.bind(Meteor.server[name], Meteor.server);
          });
+
+  _.each(['notifyUser', 'isUserOnline'], function(name) {
+    var stream_server = Meteor.server.stream_server;
+    Meteor[name] = _.bind(stream_server[name], stream_server);
+  });
+
 } else {
   // No server? Make these empty/no-ops.
   Meteor.server = null;
