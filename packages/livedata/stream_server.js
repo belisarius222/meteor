@@ -136,6 +136,13 @@ _.extend(StreamServer.prototype, {
 
   notifyAllUsers: function(msgName, msgContents) {
     var self = this;
+
+    var msg = {
+      msg: 'broadcast', // TODO: give this whole enterprise a better name
+      contents: msgContents,
+      name: msgName // this is what the client adds a handler for with `Meteor.on`
+    };
+
     _.each(self.all_sockets(), function(socket) {
       Meteor._debug('Sending message on socket. . .');
       socket.send(JSON.stringify(msg));
