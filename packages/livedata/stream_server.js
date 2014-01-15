@@ -124,13 +124,19 @@ _.extend(StreamServer.prototype, {
     return self.user_sessions().length > 0;
   },
 
-  notifyUser: function(userId, msg) {
+  notifyUser: function(userId, msgName, msgContents) {
     var self = this;
 
     if (! self.isUserOnline(userId)) {
       Meteor._debug('Could not notify offline user: '+userId);
       return;
     }
+
+    var msg = {
+      msg: 'broadcast', // TODO: give this whole enterprise a better name
+      contents: msgContents,
+      name: msgName // this is what the client adds a handler for with `Meteor.on`
+    };
 
     var userSockets = self.user_sockets();
 
