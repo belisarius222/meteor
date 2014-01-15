@@ -56,3 +56,7 @@ Meteor.default_connection = Meteor.connection;
 // We should transition from Meteor.connect to DDP.connect.
 // XXX COMPAT WITH 0.6.4
 Meteor.connect = DDP.connect;
+
+Meteor.on = function(msgName, handler) {
+  Meteor.connection.broadcast_handlers[msgName] = handler;
+};

@@ -157,6 +157,9 @@ var Connection = function (url, options) {
   self._userId = null;
   self._userIdDeps = (typeof Deps !== "undefined") && new Deps.Dependency;
 
+  // msg.name -> handler function, invoked with self as the value of `this`
+  self.broadcast_handlers = {};
+
   // Block auto-reload while we're waiting for method responses.
   if (Meteor.isClient && Package.reload && !options.reloadWithOutstanding) {
     Package.reload.Reload._onMigrate(function (retry) {
@@ -212,6 +215,8 @@ var Connection = function (url, options) {
       self._livedata_result(msg);
     else if (msg.msg === 'error')
       self._livedata_error(msg);
+    else if (msg.msg === 'broadcast')
+      self._livedata_broadcast(msg);
     else
       Meteor._debug("discarding unknown livedata message type", msg);
   };
@@ -966,6 +971,13 @@ _.extend(Connection.prototype, {
     self['_process_' + msg.msg](msg, updates);
   },
 
+  _livedata_broadcast: function(msg) {
+    var self = this;
+    var handler = self.broadcast_handlers[msg.name];
+    if (handler) {
+      handler.call(self, msg);
+    }
+  },
 
   _livedata_data: function (msg) {
     var self = this;

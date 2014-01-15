@@ -24,7 +24,8 @@ if (Package.webapp) {
 
   // Proxy the public methods of Meteor.server so they can
   // be called directly on Meteor.
-  _.each(['publish', 'methods', 'call', 'apply', 'onConnection'],
+  _.each(['publish', 'methods', 'call', 'apply', 'onConnection',
+          'notifyUser', 'isUserOnline'],
          function (name) {
            Meteor[name] = _.bind(Meteor.server[name], Meteor.server);
          });

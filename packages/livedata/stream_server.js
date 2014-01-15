@@ -105,6 +105,40 @@ _.extend(StreamServer.prototype, {
     return _.values(self.open_sockets);
   },
 
+  user_sockets: function(userId) {
+    var self = this;
+    return _.filter(self.allSockets(), function(socket) {
+      return socket._meteorSession && socket._meteorSession.userId === userId;
+    });
+  },
+
+  user_sessions: function(userId) {
+    var self = this;
+    return _.filter(self.sessions, function(session) {
+      return session.userId === userId;
+    });
+  },
+
+  isUserOnline: function(userId) {
+    var self = this;
+    return self.user_sessions().length > 0;
+  },
+
+  notifyUser: function(userId, msg) {
+    var self = this;
+
+    if (! self.isUserOnline(userId)) {
+      Meteor._debug('Could not notify offline user: '+userId);
+      return;
+    }
+
+    var userSockets = self.user_sockets();
+
+    _.each(userSockets, function(socket) {
+      socket.send(JSON.stringify(msg));
+    });
+  },
+
   // Redirect /websocket to /sockjs/websocket in order to not expose
   // sockjs to clients that want to use raw websockets
   _redirectWebsocketEndpoint: function() {
