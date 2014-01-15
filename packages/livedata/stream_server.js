@@ -134,6 +134,14 @@ _.extend(StreamServer.prototype, {
     });
   },
 
+  notifyAllUsers: function(msgName, msgContents) {
+    var self = this;
+    _.each(self.all_sockets(), function(socket) {
+      Meteor._debug('Sending message on socket. . .');
+      socket.send(JSON.stringify(msg));
+    });
+  },
+
   // Redirect /websocket to /sockjs/websocket in order to not expose
   // sockjs to clients that want to use raw websockets
   _redirectWebsocketEndpoint: function() {
