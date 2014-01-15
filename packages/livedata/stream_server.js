@@ -107,7 +107,7 @@ _.extend(StreamServer.prototype, {
 
   user_sockets: function(userId) {
     var self = this;
-    return _.filter(self.allSockets(), function(socket) {
+    return _.filter(self.all_sockets(), function(socket) {
       return socket._meteorSession && socket._meteorSession.userId === userId;
     });
   },
