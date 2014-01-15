@@ -29,7 +29,7 @@ if (Package.webapp) {
            Meteor[name] = _.bind(Meteor.server[name], Meteor.server);
          });
 
-  _.each(['notifyUser', 'isUserOnline'], function(name) {
+  _.each(['notifyUser'], function(name) {
     var stream_server = Meteor.server.stream_server;
     Meteor[name] = _.bind(stream_server[name], stream_server);
   });
