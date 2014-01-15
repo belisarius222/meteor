@@ -45,3 +45,14 @@ if (Package.webapp) {
 // backcompat as a courtesy even though it was never documented.
 // XXX COMPAT WITH 0.6.4
 Meteor.default_server = Meteor.server;
+
+var getSessionsForUser = function(userId) {
+  var allSessions = Meteor.server.sessions;
+  return _.filter(allSessions, function(session) {
+    return session.userId === userId;
+  });
+};
+
+Meteor.isUserOnline = function(userId) {
+  return getSessionsForUser(userId).length > 0;
+};

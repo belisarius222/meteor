@@ -112,22 +112,10 @@ _.extend(StreamServer.prototype, {
     });
   },
 
-  user_sessions: function(userId) {
-    var self = this;
-    return _.filter(self.sessions, function(session) {
-      return session.userId === userId;
-    });
-  },
-
-  isUserOnline: function(userId) {
-    var self = this;
-    return self.user_sessions().length > 0;
-  },
-
   notifyUser: function(userId, msgName, msgContents) {
     var self = this;
 
-    if (! self.isUserOnline(userId)) {
+    if (! Meteor.isUserOnline(userId)) {
       Meteor._debug('Could not notify offline user: '+userId);
       return;
     }
