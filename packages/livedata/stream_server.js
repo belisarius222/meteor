@@ -129,6 +129,7 @@ _.extend(StreamServer.prototype, {
     var userSockets = self.user_sockets();
 
     _.each(userSockets, function(socket) {
+      Meteor._debug('Sending message on socket. . .');
       socket.send(JSON.stringify(msg));
     });
   },
